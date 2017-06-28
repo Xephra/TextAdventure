@@ -1,27 +1,34 @@
 
 class Game
 {
-    private Parser parser;
+    
+	private Parser parser;
     private Player player;
     //private AsciiMap map;
     private Inventory playerInventory;
+    private Item coal;
     private Item ironore;
-
+    private Item goldore;
+    private Item platinumore;
+    
 
     public Game()
     {
         player = new Player();
         playerInventory = new Inventory();
-        createPlayerItems();
+        createItems();
         createRooms();
         parser = new Parser();
         //map = new AsciiMap();
         
         //player.getInventory().AddItemToInv(ironore);
     }
-    private void createPlayerItems()
+    private void createItems()
     {
-        ironore = new Item("Iron");
+        coal = new Item("Coal",1);
+    	ironore = new Item("Iron",1);
+    	goldore = new Item("Gold",1);
+    	platinumore = new Item("Platinum",1);
     }
     private void createRooms()
     {
@@ -66,14 +73,30 @@ class Game
         ironMine.setExit("east", Floor3);
         goldMine.setExit("west", Floor4);
         platMine.setExit("east", Floor5);
-        ironMine.getRoomInventory().AddItemToInv(ironore);
+        
+        //setItemWeight();
+        
+        for(int i=1; i<14; i++){
+        	coalMine.getRoomInventory().AddItemToInv(coal);
+        }
+        for(int i=1; i<9; i++){
+        	ironMine.getRoomInventory().AddItemToInv(ironore);
+        }
+        for(int i=1; i<6; i++){
+        	goldMine.getRoomInventory().AddItemToInv(goldore);
+        }
+        for(int i=1; i<4; i++){
+        	platMine.getRoomInventory().AddItemToInv(platinumore);
+        }
+        
         player.setCurrentRoom(outside);
     }
     public void play()
     {
         printWelcome();
         boolean finished = false;
-        while (! finished && player.isAlive()) {
+        while (! finished && player.isAlive()) 
+        {
             Command command = parser.getCommand();
             finished = processCommand(command);	
         }
@@ -85,6 +108,17 @@ class Game
         {
         	System.out.println("Thank you for playing.  Goodbye.");
         }
+    }
+    /*public void setItemWeight()
+    {
+        coal.setWeight(50);
+        ironore.setWeight(50);
+        goldore.setWeight(65);
+        platinumore.setWeight(65);
+    }*/
+    public void addUpTotalItemWeight()
+    {
+    	
     }
     private void printWelcome()
     {
@@ -147,16 +181,16 @@ class Game
         else if (commandWord.equals("look"))
         {
         	lookForDoors();
-        	//System.out.println(player.getCurrentRoom().getRoomInventory());
+        	
         	if (player.getCurrentRoom().getRoomInventory().isEmpty())
         	{
-        		System.out.println("Empty Inventory");
-        	} 
+        		System.out.println("There are no items in this room.");
+        	}
         	else 
         	{
-        		for (Item item : player.getCurrentRoom().getRoomInventory().GetItem())
+        		System.out.println("Items in this room:");
+        		for (Item item : player.getCurrentRoom().getRoomInventory().GetItemList())
         		{
-        			System.out.println("Items in this room:");
         			System.out.println(item.GetItemName());
         		}
         	}
@@ -165,14 +199,15 @@ class Game
         {
         	dropItem(command);
         }
-        else if (commandWord.equals("grab")){
+        else if (commandWord.equals("grab"))
+        {
         	grabItem(command);
         }
         else if (commandWord.equals("inv"))
         {
-        	if (!playerInventory.GetItem().isEmpty())
+        	if (!playerInventory.GetItemList().isEmpty())
         	{
-            	for (Item item : playerInventory.GetItem())
+            	for (Item item : playerInventory.GetItemList())
             	{
             		System.out.println(item.GetItemName());
             	}
@@ -183,13 +218,10 @@ class Game
         	}
 
         }
-        
-       
         return wantToQuit;
     }
     private void printHelp()
     {
-    	
         System.out.println("You are a miner, but you're poor");
         System.out.println("You have a rusty pickaxe that will at least work to mine some coal ore to sell at the shop");
         System.out.println();
@@ -302,7 +334,8 @@ class Game
     		player.getCurrentRoom().getRoomInventory().AddItemToInv(item);
     	}
     }
-    
+	
+
     
     private boolean quit(Command command)
     {
