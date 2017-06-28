@@ -13,10 +13,11 @@ public class Inventory {
 	{
 		itemList.remove(item);
 	}
-	public List<Item> GetItem()
+	public List<Item> GetItemList()
 	{
 		return itemList;
 	}
+	
 	public boolean hasItem(String itemName)
 	{
 		for (Item item : itemList)
@@ -28,7 +29,9 @@ public class Inventory {
 		}
 		return false;
 	}
-	public Item GetItem(String itemName){
+
+	public Item GetItem(String itemName)
+	{
 		for (Item item : itemList)
 		{
 			if(item.GetItemName().equalsIgnoreCase(itemName))
@@ -38,6 +41,7 @@ public class Inventory {
 		}
 		return null;
 	}
+	
 	public boolean isEmpty()
 	{
 		if(itemList.isEmpty())
@@ -46,4 +50,21 @@ public class Inventory {
 		}
 		return false;
 	}
+    public int getTotalInventoryWeight()
+	{
+    	int totalWeight = 0;
+        for(int i=0; i< itemList.size(); i++)
+        {
+        	totalWeight += itemList.get(i).getWeight();
+        	//System.out.println(itemList.get(i).getWeight());
+        }
+        System.out.println(totalWeight);
+        return totalWeight;
+	}
+	/*public Integer getTotalItemWeight() {
+		return totalItemWeight;
+	}
+	public void setTotalItemWeight(Integer totalItemWeight) {
+		this.totalItemWeight = totalItemWeight;
+	}*/
 }
