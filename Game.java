@@ -12,6 +12,7 @@ class Game
     private Item platinumore;
     private Item uraniumore;
     private Item pickaxe;
+    private Key key;
     Room outside, mineEntrance, Floor1, Floor2, Floor3, Floor4, Floor5, coalMine, ironMine, goldMine, platMine;
 
     public Game()
@@ -25,6 +26,7 @@ class Game
     }
     private void createItems()
     {
+    	key = new Key("key",100);
     	pickaxe = new Tool("Pickaxe",10);
         coal = new Ore("Coal",50);
     	ironore = new Ore("Iron",50);
@@ -49,6 +51,8 @@ class Game
         ironMine = new Room("Iron Mine", "At the iron mine");
         goldMine = new Room("Gold Mine", "At the gold mine");
         platMine = new Room("platMine", "At the platinum mine");
+        
+        key.setLockedRoom(platMine);
 
         // Initialize room exits //
         outside.setExit("east", mineEntrance);
@@ -75,6 +79,7 @@ class Game
         ironMine.setExit("east", Floor3);
         goldMine.setExit("west", Floor4);
         platMine.setExit("east", Floor5);
+        platMine.setIsLocked(true);
         
         //setItemWeight();
 
@@ -85,6 +90,7 @@ class Game
         	platMine.getHiddenInventory().AddItemToInv(uraniumore);        
 
         playerInventory.AddItemToInv(pickaxe);
+        playerInventory.AddItemToInv(key);
         player.setCurrentRoom(outside);
     }
     public void play()
@@ -201,8 +207,7 @@ class Game
             	for (Item item : playerInventory.GetItemList())
             	{
             		System.out.println(item.GetItemName());
-            		System.out.println("Total weight");
-            		System.out.println(playerInventory.getTotalWeight());
+
             	}
         	} 
         	else
@@ -247,7 +252,7 @@ class Game
             return;
         }
 		String direction = command.getSecondWord();
-
+		
         Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null)
@@ -256,6 +261,11 @@ class Game
         }
         else 
         {
+        	if(nextRoom.getIsLocked())
+        	{
+        		System.out.println("This door is closed. You need some type of key to open it.");
+        		return;
+        	}
             player.setCurrentRoom(nextRoom);
             System.out.println(player.getCurrentRoom().getLongDescription());
             player.damage(1);

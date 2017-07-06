@@ -10,8 +10,8 @@ public class Ore extends Item {
 	{
 		// TODO Auto-generated constructor stub
 	}
-	public void sellItem()
+	/*public void sellItem()
 	{
 		
-	}
+	}*/
 }

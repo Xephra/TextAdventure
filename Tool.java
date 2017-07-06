@@ -1,11 +1,8 @@
-import java.util.Random;
-
 public class Tool extends Item {
 
 	public Tool(String name, int weight) {
 		this.itemName = name;
 		this.weight = weight;
-		Random randomDropChance = new Random();
 	}
 	public void useItem(Player player) 
 	{
@@ -63,13 +60,21 @@ public class Tool extends Item {
 		{
 			double v =  Math.random()*10;
 			
-			System.out.println(v);
+			if (v > 8)
+			{
+			player.getCurrentRoom().getRoomInventory().AddItemToInv(player.getCurrentRoom().getHiddenInventory().GetItem("Uranium"));
+			} 
+			else 
+			{
+				player.getCurrentRoom().getRoomInventory().AddItemToInv(player.getCurrentRoom().getHiddenInventory().GetItem("Platinum"));
+			}
 			player.getCurrentRoom().getRoomInventory().AddItemToInv(player.getCurrentRoom().getHiddenInventory().GetItem("Platinum"));
 			System.out.println("Some rocks fell down, it's a bit hard to see but you do see some platinum!");
+			System.out.println("There may even be some uranium in there... better watch out for that.");
 		}
 	}
-	public void sellItem()
+	/*public void sellItem()
 	{
 		System.out.println("You can not sell this item.");
-	}
+	}*/
 }

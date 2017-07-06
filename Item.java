@@ -18,5 +18,5 @@ public abstract class Item {
 		this.weight = weight;
 	}
 	public abstract void useItem(Player player);
-	public abstract void sellItem();
+	//public abstract void sellItem();
 }

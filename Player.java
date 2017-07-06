@@ -4,7 +4,7 @@ public class Player {
 	private Room currentRoom;
     //private Inventory playerInventory;
 	//Player Variables
-	private int playerHealth = 50;
+	private int playerHealth = 250;
 	private boolean radiationSick;
 	
 	

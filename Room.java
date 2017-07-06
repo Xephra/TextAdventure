@@ -23,6 +23,7 @@ class Room
 	private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
     private String name;
+    private Boolean isLocked;
 
     /**
      * Create a room described "description". Initially, it has no exits.
@@ -36,6 +37,7 @@ class Room
         this.name = roomName;
     	this.description = description;
         exits = new HashMap<String, Room>();
+        isLocked = false;
     }
 
     /**
@@ -49,6 +51,7 @@ class Room
     {
     	return this.name;
     }
+    
 
     /**
      * Return the description of the room (the one that was defined in the
@@ -98,4 +101,12 @@ class Room
     {
     	return hiddenInventory;
     }
+
+	public Boolean getIsLocked() {
+		return this.isLocked;
+	}
+
+	public void setIsLocked(Boolean isLocked) {
+		this.isLocked = isLocked;
+	}
 }
