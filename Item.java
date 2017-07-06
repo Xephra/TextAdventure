@@ -1,13 +1,7 @@
 
-public /*abstract*/ class Item {
+public abstract class Item {
 	protected String itemName;
-	private int weight;
-	
-	public Item(String name, Integer weight)
-	{
-		this.itemName = name;
-		this.weight = weight;
-	}
+	protected int weight;
 	
 	public String GetItemName()
 	{
@@ -23,5 +17,6 @@ public /*abstract*/ class Item {
 	{
 		this.weight = weight;
 	}
-
+	public abstract void useItem(Player player);
+	public abstract void sellItem();
 }

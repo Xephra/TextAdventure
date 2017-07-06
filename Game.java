@@ -10,7 +10,9 @@ class Game
     private Item ironore;
     private Item goldore;
     private Item platinumore;
-    
+    private Item uraniumore;
+    private Item pickaxe;
+    Room outside, mineEntrance, Floor1, Floor2, Floor3, Floor4, Floor5, coalMine, ironMine, goldMine, platMine;
 
     public Game()
     {
@@ -19,25 +21,20 @@ class Game
         createItems();
         createRooms();
         parser = new Parser();
-        //map = new AsciiMap();
-
-        for(int i=0; i<3; i++){
-        	playerInventory.AddItemToInv(ironore);
-        }
-        
-        
         
     }
     private void createItems()
     {
-        coal = new Item("Coal",50);
-    	ironore = new Item("Iron",50);
-    	goldore = new Item("Gold",60);
-    	platinumore = new Item("Platinum",60);
+    	pickaxe = new Tool("Pickaxe",10);
+        coal = new Ore("Coal",50);
+    	ironore = new Ore("Iron",50);
+    	goldore = new Ore("Gold",60);
+    	platinumore = new Ore("Platinum",60);
+    	uraniumore = new Ore("Uranium", 50);
     }
     private void createRooms()
     {
-        Room outside, mineEntrance, Floor1, Floor2, Floor3, Floor4, Floor5, coalMine, ironMine, goldMine, platMine /*shop*/;
+        
 
         // create the rooms
         outside = new Room("outside","Outside of the mine");
@@ -80,25 +77,18 @@ class Game
         platMine.setExit("east", Floor5);
         
         //setItemWeight();
-        
-        for(int i=1; i<14; i++){
-        	coalMine.getRoomInventory().AddItemToInv(coal);
-        }
-        for(int i=1; i<9; i++){
-        	ironMine.getRoomInventory().AddItemToInv(ironore);
-        }
-        for(int i=1; i<6; i++){
-        	goldMine.getRoomInventory().AddItemToInv(goldore);
-        }
-        for(int i=1; i<4; i++){
-        	platMine.getRoomInventory().AddItemToInv(platinumore);
-        }
-        
+
+        	coalMine.getHiddenInventory().AddItemToInv(coal);
+        	ironMine.getHiddenInventory().AddItemToInv(ironore);
+        	goldMine.getHiddenInventory().AddItemToInv(goldore);
+        	platMine.getHiddenInventory().AddItemToInv(platinumore);
+        	platMine.getHiddenInventory().AddItemToInv(uraniumore);        
+
+        playerInventory.AddItemToInv(pickaxe);
         player.setCurrentRoom(outside);
     }
     public void play()
     {
-    	playerInventory.getTotalInventoryWeight();
         printWelcome();
         boolean finished = false;
         while (! finished && player.isAlive()) 
@@ -122,10 +112,6 @@ class Game
         goldore.setWeight(65);
         platinumore.setWeight(65);
     }*/
-    public void addUpTotalItemWeight()
-    {
-    	
-    }
     private void printWelcome()
     {
     	//System.out.println(player.getInventory());
@@ -164,7 +150,7 @@ class Game
     private boolean processCommand(Command command)
     {
         boolean wantToQuit = false;
-
+        
         if(command.isUnknown()) 
         {
             System.out.println("I don't know what you mean...");
@@ -187,7 +173,6 @@ class Game
         else if (commandWord.equals("look"))
         {
         	lookForDoors();
-        	
         	if (player.getCurrentRoom().getRoomInventory().isEmpty())
         	{
         		System.out.println("There are no items in this room.");
@@ -216,13 +201,32 @@ class Game
             	for (Item item : playerInventory.GetItemList())
             	{
             		System.out.println(item.GetItemName());
+            		System.out.println("Total weight");
+            		System.out.println(playerInventory.getTotalWeight());
             	}
         	} 
         	else
         	{
         		System.out.println("You have no items");
+        		System.out.println(playerInventory.getTotalWeight());
         	}
-
+        }
+        else if (commandWord.equals("use")){
+        	if(!command.hasSecondWord()) 
+            {
+                System.out.println("Use what?");
+            }
+        	else
+            {
+        		Item usedItem = playerInventory.GetItem(command.getSecondWord());
+        		if(usedItem == null){
+        			System.out.println("What?");
+        		}
+        		else
+        		{
+        			usedItem.useItem(player);
+        		}
+            }
         }
         return wantToQuit;
     }
@@ -233,15 +237,9 @@ class Game
         System.out.println();
         System.out.println("Your command words are:");
         parser.showCommands();
-    }
+    }    
     private void goRoom(Command command)
-    {
-        if (player.getCurrentRoom().getName().equalsIgnoreCase("Floor1"))
-        {
-        	System.out.println("You found some iron ore!");
-        	playerInventory.AddItemToInv(ironore);
-        }
-    	
+    {	
     	//printAsciiMap();
     	if(!command.hasSecondWord()) 
         {
@@ -302,6 +300,7 @@ class Game
         	map.mapPosIron();
         }
     */
+    
     private void lookForDoors()
     {
     	System.out.println(player.getCurrentRoom().getLongDescription());
@@ -315,16 +314,35 @@ class Game
     		System.out.println("Unknown Command");
     		return;
     	}
-    	Item item = player.getCurrentRoom().getRoomInventory().GetItem(command.getSecondWord());
-    	
-    	if(command.hasSecondWord() && player.getCurrentRoom().getRoomInventory().hasItem(command.getSecondWord()))
+    	if(playerInventory.getTotalWeight() < 150)
     	{
+    	
+    	Item item = player.getCurrentRoom().getRoomInventory().GetItem(command.getSecondWord());
+    	if(command.hasSecondWord() && player.getCurrentRoom().getRoomInventory().hasItem(command.getSecondWord()))
+    	
+    		{
     		player.getCurrentRoom().getRoomInventory().RemoveItemFromInv(item);
     		playerInventory.AddItemToInv(item);
+    		}
+    	} 
+    	
+    	else 
+    	
+    	{
+    		System.out.println("You can not carry this item.");
+    		System.out.println("You are overencumbered!");
     	}
+    	if (playerInventory.GetItemList().contains(uraniumore))
+    	{
+    		player.setRadiationSick(true);
+    		System.out.println("You found uranium! You're now suffering from radiation sickness. (-10 health)");
+    		player.damage(10);
+    	} else {
+    		player.setRadiationSick(false);
+    	}
+    	
     }
-    
-    
+
     private void dropItem(Command command)
     {
     	if (!command.hasSecondWord())
@@ -332,8 +350,16 @@ class Game
     		System.out.println("Unknown Command");
     		return;
     	}
+
+    	playerInventory.getTotalWeight();
     	Item item = playerInventory.GetItem(command.getSecondWord());
     	
+    	if (playerInventory.GetItemList().contains(uraniumore))
+    	{
+    		player.setRadiationSick(false);
+    		System.out.println("You're no longer radiation sick.");
+    	}
+ 
     	if(command.hasSecondWord() && playerInventory.hasItem(command.getSecondWord()))
     	{
     		playerInventory.RemoveItemFromInv(item);
@@ -341,8 +367,6 @@ class Game
     	}
     }
 	
-
-    
     private boolean quit(Command command)
     {
         if(command.hasSecondWord()) 

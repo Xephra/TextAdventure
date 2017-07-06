@@ -18,6 +18,7 @@ import java.util.Iterator;
 
 class Room
 {
+	private Inventory hiddenInventory;
 	private Inventory roomInventory;
 	private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
@@ -30,6 +31,7 @@ class Room
      */
     public Room(String roomName,String description)
     {
+    	hiddenInventory = new Inventory();
     	roomInventory = new Inventory();
         this.name = roomName;
     	this.description = description;
@@ -91,5 +93,9 @@ class Room
     public Inventory getRoomInventory()
     {
 		return roomInventory;
+    }
+    public Inventory getHiddenInventory()
+    {
+    	return hiddenInventory;
     }
 }

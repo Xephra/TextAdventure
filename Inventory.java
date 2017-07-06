@@ -1,18 +1,40 @@
 import java.util.*;
-public class Inventory {
+public class Inventory 
+{
 	
 	private List<Item> itemList;
-	public Inventory() {
+	private int maxInventoryWeigth = 250;
+	
+	public int getMaxInventoryWeigth() 
+	{
+		return maxInventoryWeigth;
+	}
+
+	public void setMaxInventoryWeigth(int maxInventoryWeigth) 
+	{
+		this.maxInventoryWeigth = maxInventoryWeigth;
+	}
+
+	public int getTotalWeight() 
+	{
+		return CheckTotalInventoryWeight();
+	}
+	
+	public Inventory() 
+	{
 		itemList = new ArrayList<Item>();
 	}
 	public void AddItemToInv(Item item)
 	{
 		itemList.add(item);
-	}
+		}
+	
 	public void RemoveItemFromInv(Item item)
 	{
 		itemList.remove(item);
+		
 	}
+	
 	public List<Item> GetItemList()
 	{
 		return itemList;
@@ -50,16 +72,15 @@ public class Inventory {
 		}
 		return false;
 	}
-    public int getTotalInventoryWeight()
+    private int CheckTotalInventoryWeight()
 	{
-    	int totalWeight = 0;
+    	int weight = 0;
         for(int i=0; i< itemList.size(); i++)
         {
-        	totalWeight += itemList.get(i).getWeight();
+        	weight += itemList.get(i).getWeight();
         	//System.out.println(itemList.get(i).getWeight());
         }
-        System.out.println(totalWeight);
-        return totalWeight;
+        return weight;
 	}
 	/*public Integer getTotalItemWeight() {
 		return totalItemWeight;

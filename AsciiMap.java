@@ -3,8 +3,8 @@ public class AsciiMap {
 
 	public AsciiMap() 
 	{
-	}
-	   
+		
+	}  
     public void mapPosOutside()
     {
         System.out.println("This is a map of the mine________#########################################");

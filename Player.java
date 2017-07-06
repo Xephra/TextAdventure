@@ -5,11 +5,13 @@ public class Player {
     //private Inventory playerInventory;
 	//Player Variables
 	private int playerHealth = 50;
+	private boolean radiationSick;
 	
 	
 	
 	public Player()
 	{
+		radiationSick = false;
 		//playerInventory = new Inventory();
 	}
 	/*public Inventory getInventory()
@@ -27,6 +29,10 @@ public class Player {
 	public void damage(int damageAmount)
 	{
 		this.playerHealth-=damageAmount;
+		if (radiationSick){
+			this.playerHealth-=5;
+			System.out.println("You're suffering from radiation sickness! + -5 health.");
+		}
 	}
 	public void heal(int healingAmount)
 	{
@@ -34,7 +40,7 @@ public class Player {
 	}
 	public Boolean isAlive()
 	{
-		if(playerHealth == 0)
+		if(playerHealth <= 0)
 		{	
 			return false;
 			
@@ -43,5 +49,11 @@ public class Player {
 	}
 	public void printHealth(){
 		 System.out.println("You are bleeding, you lost 1 health. (Current Health: " + playerHealth + ")");
+	}
+	public boolean isRadiationSick() {
+		return radiationSick;
+	}
+	public void setRadiationSick(boolean radiationSick) {
+		this.radiationSick = radiationSick;
 	}
 }
